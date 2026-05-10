@@ -1,0 +1,6 @@
+setenv autoload no
+dhcp
+setenv serverip @@NFS_SERVER_IP@@
+tftp ${kernel_addr_r} @@KERNEL_IMAGETYPE@@
+setenv bootargs "earlycon console=ttyS0,115200 8250.nr_uarts=1 root=/dev/nfs nfsroot=@@NFS_SERVER_IP@@:/srv/nfs/rpi4,vers=3,nolock,tcp ip=dhcp rw rootwait"
+@@KERNEL_BOOTCMD@@ ${kernel_addr_r} - ${fdt_addr}

@@ -1,0 +1,8 @@
+[project]
+name = "yocto-build-env"
+version = "0.1.0"
+description = "kas-driven Yocto build environment (whinlatter)"
+requires-python = ">=3.10"
+dependencies = [
+    "kas>=5.2",
+]

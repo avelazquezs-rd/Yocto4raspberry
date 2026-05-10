@@ -1,0 +1,55 @@
+header:
+  version: 14
+
+build_system: openembedded
+
+machine: raspberrypi4-64
+distro: a-distro
+
+target:
+  - core-image-minimal
+
+repos:
+  # Whinlatter (Yocto 5.3) split repos — poky's master branch is no longer
+  # updated. The Poky reference *distribution* still exists, assembled from
+  # these three upstreams plus the BSP layer.
+
+  bitbake:
+    url: https://git.openembedded.org/bitbake
+    tag: yocto-5.3.3
+    path: layers/bitbake
+    # bitbake is the build engine, not a Yocto layer.
+    layers: {}
+
+  openembedded-core:
+    url: https://git.openembedded.org/openembedded-core
+    tag: yocto-5.3.3
+    path: layers/openembedded-core
+    layers:
+      meta:
+
+  meta-yocto:
+    url: https://git.yoctoproject.org/meta-yocto
+    tag: yocto-5.3.3
+    path: layers/meta-yocto
+    layers:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-raspberrypi:
+    url: https://git.yoctoproject.org/git/meta-raspberrypi
+    branch: whinlatter
+    path: layers/meta-raspberrypi
+    layers:
+      .:
+
+  meta-a-layer:
+    path: layers/meta-a-layer
+    layers:
+      .:
+
+# Environment variables passed from the shell into bitbake.
+# `NFS_SERVER_IP` is required for netboot (TFTP/NFS server's LAN IP).
+# Set it before running kas, e.g.:  export NFS_SERVER_IP=<host-LAN-IP>
+env:
+  NFS_SERVER_IP:
