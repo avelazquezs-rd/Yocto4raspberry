@@ -14,6 +14,9 @@
 /.vscode/
 /.claude/
 
+# direnv per-project shell env (template at .envrc.example)
+/.envrc
+
 # Python / OS scratch
 __pycache__/
 *.pyc

@@ -23,11 +23,24 @@ All commands are run from the repository root and invoked through
 `uv run`, which keeps `.venv` in sync with `pyproject.toml` automatically.
 
 The build needs the LAN IP of the host that will serve TFTP + NFS to the
-Pi (see `docs/netboot-plan.md`). Export it before running kas:
+Pi (see `docs/netboot-plan.md`). The recommended way to set this per-project
+is [direnv](https://direnv.net):
 
 ```bash
-export NFS_SERVER_IP=<host-LAN-IP>    # the build host's LAN IP
+sudo apt install direnv                                  # one-time
+echo 'eval "$(direnv hook bash)"' >> ~/.bashrc           # one-time, restart shell
 
+# Per-clone: create an .envrc at the repo root with one line:
+#     export NFS_SERVER_IP=<host-LAN-IP>
+# Then enable it:
+direnv allow
+```
+
+After that, `NFS_SERVER_IP` is loaded automatically whenever you `cd`
+into this repo. If you'd rather not use direnv, plain `export NFS_SERVER_IP=…`
+also works — kas reads it from the shell environment.
+
+```bash
 # First-time setup: clone the upstream layers into ./layers/
 # and generate bblayers.conf + local.conf in ./build/conf/.
 uv run kas checkout kas.yml
