@@ -47,8 +47,17 @@ TFTP_DIRECTORY="/srv/tftp"
 TFTP_OPTIONS="--secure --create"
 EOF
 
-# NFS export
-echo '/srv/nfs/rpi4 *(rw,sync,no_root_squash,no_subtree_check,fsid=0)' | sudo tee /etc/exports
+# NFS export — all_squash + anonuid/anongid=0 lets us extract the rootfs
+# as an unprivileged user while the Pi still sees root-owned files.
+echo '/srv/nfs/rpi4 *(rw,sync,all_squash,anonuid=0,anongid=0,no_subtree_check,fsid=0)' | sudo tee /etc/exports
+
+# Give the build user write access to both deploy roots without
+# transferring ownership. Group membership + g+w on the dirs (setgid
+# so new files inherit the group) is enough for deploy-netboot.sh.
+sudo usermod -aG tftp "$USER"
+sudo chgrp tftp /srv/nfs/rpi4                # or another shared group
+sudo chmod 2775 /srv/tftp /srv/nfs/rpi4
+# Log out / back in (or `newgrp tftp`) so the new group takes effect.
 ```
 
 ### 1.4 Pin `rpc.mountd` to a fixed port — **critical**

@@ -85,5 +85,4 @@ After `uv run kas build kas.yml`:
 build/tmp/deploy/images/raspberrypi4-64/core-image-minimal-raspberrypi4-64.rootfs.wic.bz2
 ```
 
-Decompress and `dd` to your SD card. For network-boot setup (TFTP kernel
-+ NFS rootfs), see [docs/netboot-plan.md](docs/netboot-plan.md).
+Decompress and `dd` to your SD card. For network-boot setup (TFTP kernel + NFS rootfs), see [docs/netboot-plan.md](docs/netboot-plan.md).

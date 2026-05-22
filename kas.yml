@@ -7,7 +7,7 @@ machine: raspberrypi4-64
 distro: a-distro
 
 target:
-  - core-image-minimal
+  - image-minimal-ext
 
 repos:
   # Whinlatter (Yocto 5.3) split repos — poky's master branch is no longer
