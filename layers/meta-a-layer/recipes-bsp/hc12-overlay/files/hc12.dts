@@ -1,0 +1,43 @@
+/*
+ * Device tree overlay: HC-12 wireless UART child node on UART3.
+ *
+ * Pairs with the stock `uart3` overlay (which enables UART3 and
+ * applies pinctrl for GPIO 4 / GPIO 5). Load order matters:
+ *
+ *     dtoverlay=uart3
+ *     dtoverlay=hc12
+ *
+ * Header pin mapping (RPi 4 40-pin connector):
+ *   HC-12 VCC  <- header pin  1 (3V3)
+ *   HC-12 GND  <- header pin  6 (GND)
+ *   HC-12 RXD  <- header pin  7 (GPIO 4 / UART3 TXD)
+ *   HC-12 TXD  <- header pin 29 (GPIO 5 / UART3 RXD)
+ *   HC-12 SET  <- header pin 11 (GPIO 17)
+ *
+ * SET is active low (asserted -> AT command mode). The driver leaves
+ * it deasserted in normal transparent-data operation.
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2711";
+
+	fragment@0 {
+		target = <&uart3>;
+		__overlay__ {
+			hc12 {
+				compatible = "hc01,hc-12";
+				current-speed = <9600>;
+				set-gpios = <&gpio 17 1>;	/* 1 = GPIO_ACTIVE_LOW */
+
+				/* Defaults applied at probe via AT commands */
+				hc01,channel    = <1>;
+				hc01,baud-rate  = <9600>;
+				hc01,mode       = "FU3";
+				hc01,tx-power   = <8>;
+			};
+		};
+	};
+};
